@@ -14,12 +14,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,66 +78,87 @@ public class MainActivity extends AppCompatActivity {
 //
 //        });
         /**
-         * Add DATA
+         * Set a document
+         * url: https://firebase.google.com/docs/firestore/manage-data/add-data
          */
-        // Create a new user with a first and last name
-//        Map<String, Object> user = new HashMap<>();
-//        user.put("first","Ada");
-//        user.put("last","Lovelace");
-//        user.put("born", 1815);
+//        Map<String, Object> city = new HashMap<>();
+//        city.put("name", "Los Angeles");
+//        city.put("state", "CA");
+//        city.put("country", "USA");
+//        city.put("capital", true);
 //
-//        // Add a new document with a generated ID
-//        db.collection("users")
-//                .add(user)
-//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//        db.collection("cities").document("LA")
+//                .set(city, SetOptions.merge())
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
 //                    @Override
-//                    public void onSuccess(DocumentReference documentReference) {
-//                        Log.d(TAG, "DocumentSnapshot add with ID: " + documentReference.getId());
+//                    public void onSuccess(Void unused) {
+//                        Log.d(TAG, "DocumentSnapshot successfully written!");
 //                    }
 //                })
 //                .addOnFailureListener(new OnFailureListener() {
 //                    @Override
 //                    public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Error adding document ", e);
+//                        Log.w(TAG, "Error writing document", e);
 //                    }
 //                });
-
-        // Create a new user with a first, middle, and last name
-//        Map<String, Object> user = new HashMap<>();
-//        user.put("first","Alan");
-//        user.put("middle", "Mathison");
-//        user.put("last","Turing");
-//        user.put("born",1912);
+        // Update one field, creating the document if it does not already exist.
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("capital", true);
 //
-//        // Add a new document with a generated ID
-//        db.collection("users")
-//                .add(user)
-//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//        db.collection("cities").document("BJ")
+//                .set(data, SetOptions.merge());
+
+        //Data types
+//        Map<String, Object> docData = new HashMap<>();
+//        docData.put("stringExample", "Hello world!");
+//        docData.put("booleanExample", true);
+//        docData.put("numberExample", 3.14159265);
+//        docData.put("dateExample", new Timestamp(new Date()));
+//        docData.put("listExample", Arrays.asList(1, 2, 3));
+//        docData.put("nullExample", null);
+//
+//        Map<String, Object> nestedData = new HashMap<>();
+//        nestedData.put("a", 5);
+//        nestedData.put("b", true);
+//
+//        docData.put("objectExample", nestedData);
+//
+//        db.collection("data").document("one")
+//                .set(docData)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
 //                    @Override
-//                    public void onSuccess(DocumentReference documentReference) {
-//                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d(TAG, "DocumentSnapshot successfully written!");
 //                    }
 //                })
 //                .addOnFailureListener(new OnFailureListener() {
 //                    @Override
 //                    public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Error adding document", e);
+//                        Log.w(TAG, "Error writing document", e);
 //                    }
 //                });
+//        City city = new City("Los Angeles", "CA", "USA",
+//                false, 5000000L, Arrays.asList("west_coast", "sorcal"));
+//        db.collection("cities").document("LA").set(city);
+        // Add a new document with a generated id.
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", "Tokyo");
+        data.put("country", "Japan");
+        data.put("timestamp", FieldValue.serverTimestamp());
 
-        // Read Data
-        db.collection("users")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+        db.collection("cities")
+                .add(data)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.w(TAG, "Error getting documents. ", task.getException());
-                        }
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
                     }
                 });
     }
