@@ -15,12 +15,15 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.Source;
 
 
 import java.util.Arrays;
@@ -51,115 +54,107 @@ public class MainActivity extends AppCompatActivity {
 
         Button saveButton = findViewById(R.id.save_button);
 
-//        saveButton.setOnClickListener(view -> {
-//            String title =  enterTitle.getText().toString().trim();
-//            String thought = enterThought.getText().toString().trim();
-//
-//            Map<String, Object> data = new HashMap<>();
-//            data.put(KEY_TITLE, title);
-//            data.put(KEY_THOUGHT,thought);
-//
-//            db.collection("Journal")
-//                    .document("First Thoughts")
-//                    .set(data)
-//                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                        @Override
-//                        public void onSuccess(Void unused) {
-//                            Toast.makeText(MainActivity.this,
-//                                    "Success", Toast.LENGTH_LONG).show();
-//                        }
-//                    })
-//                    .addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Log.d(TAG, "onFailure: " + e);
-//                        }
-//                    });
-//
-//        });
         /**
-         * Set a document
-         * url: https://firebase.google.com/docs/firestore/manage-data/add-data
+         * Get data from a document
+         * url: https://firebase.google.com/docs/firestore/query-data/get-data
          */
-//        Map<String, Object> city = new HashMap<>();
-//        city.put("name", "Los Angeles");
-//        city.put("state", "CA");
-//        city.put("country", "USA");
-//        city.put("capital", true);
+        CollectionReference cities = db.collection("cities");
 //
-//        db.collection("cities").document("LA")
-//                .set(city, SetOptions.merge())
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//        Map<String, Object> data1 = new HashMap<>();
+//        data1.put("name", "San Francisco");
+//        data1.put("state", "CA");
+//        data1.put("country", "USA");
+//        data1.put("capital", false);
+//        data1.put("population", 860000);
+//        data1.put("regions", Arrays.asList("west_coast", "norcal"));
+//        cities.document("SF").set(data1);
+//
+//        Map<String, Object> data2 = new HashMap<>();
+//        data2.put("name", "Los Angeles");
+//        data2.put("state", "CA");
+//        data2.put("country", "USA");
+//        data2.put("capital", false);
+//        data2.put("population", 3900000);
+//        data2.put("regions", Arrays.asList("west_coast", "socal"));
+//        cities.document("LA").set(data2);
+//
+//        Map<String, Object> data3 = new HashMap<>();
+//        data3.put("name", "Washington D.C.");
+//        data3.put("state", null);
+//        data3.put("country", "USA");
+//        data3.put("capital", true);
+//        data3.put("population", 680000);
+//        data3.put("regions", Arrays.asList("east_coast"));
+//        cities.document("DC").set(data3);
+//
+//        Map<String, Object> data4 = new HashMap<>();
+//        data4.put("name", "Tokyo");
+//        data4.put("state", null);
+//        data4.put("country", "Japan");
+//        data4.put("capital", true);
+//        data4.put("population", 9000000);
+//        data4.put("regions", Arrays.asList("kanto", "honshu"));
+//        cities.document("TOK").set(data4);
+//
+//        Map<String, Object> data5 = new HashMap<>();
+//        data5.put("name", "Beijing");
+//        data5.put("state", null);
+//        data5.put("country", "China");
+//        data5.put("capital", true);
+//        data5.put("population", 21500000);
+//        data5.put("regions", Arrays.asList("jingjinji", "hebei"));
+//        cities.document("BJ").set(data5);
+//
+//        DocumentReference docRef = db.collection("cities").document("SF");
+//
+// Source can be CACHE, SERVER, or DEFAULT.
+//        Source source = Source.CACHE;
+
+// Get the document, forcing the SDK to use the offline cache
+//        docRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    // Document found in the offline cache
+//                    DocumentSnapshot document = task.getResult();
+//                    Log.d(TAG, "Cached document data: " + document.getData().get("country"));
+//                } else {
+//                    Log.d(TAG, "Cached get failed: ", task.getException());
+//                }
+//            }
+//        });
+        //Get multiple documents from a collection
+//        db.collection("cities")
+//                .whereEqualTo("capital", true)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 //                    @Override
-//                    public void onSuccess(Void unused) {
-//                        Log.d(TAG, "DocumentSnapshot successfully written!");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Error writing document", e);
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Log.d(TAG, document.getId() + " => " + document.getData());
+//                            }
+//                        } else {
+//                            Log.d(TAG, "Error getting documents: ", task.getException());
+//                        }
 //                    }
 //                });
-        // Update one field, creating the document if it does not already exist.
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("capital", true);
-//
-//        db.collection("cities").document("BJ")
-//                .set(data, SetOptions.merge());
 
-        //Data types
-//        Map<String, Object> docData = new HashMap<>();
-//        docData.put("stringExample", "Hello world!");
-//        docData.put("booleanExample", true);
-//        docData.put("numberExample", 3.14159265);
-//        docData.put("dateExample", new Timestamp(new Date()));
-//        docData.put("listExample", Arrays.asList(1, 2, 3));
-//        docData.put("nullExample", null);
-//
-//        Map<String, Object> nestedData = new HashMap<>();
-//        nestedData.put("a", 5);
-//        nestedData.put("b", true);
-//
-//        docData.put("objectExample", nestedData);
-//
-//        db.collection("data").document("one")
-//                .set(docData)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.d(TAG, "DocumentSnapshot successfully written!");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Error writing document", e);
-//                    }
-//                });
-//        City city = new City("Los Angeles", "CA", "USA",
-//                false, 5000000L, Arrays.asList("west_coast", "sorcal"));
-//        db.collection("cities").document("LA").set(city);
-        // Add a new document with a generated id.
-        Map<String, Object> data = new HashMap<>();
-        data.put("name", "Tokyo");
-        data.put("country", "Japan");
-        data.put("timestamp", FieldValue.serverTimestamp());
-
-
+        //Get all documents in a collection
         db.collection("cities")
-                .add(data)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
                     }
                 });
+
     }
 }
